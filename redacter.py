@@ -73,7 +73,7 @@ def redact_info(name, muscles):
     insertion_redaction = ""
 
     # Add function to redaction
-    if len(functions) == 1:
+    if functions[0] and len(functions) == 1:
         function_redaction = f"Su función es la de " + functions[0].lower()
     elif len(functions) > 1:
         for i, function in enumerate(functions):
@@ -91,14 +91,14 @@ def redact_info(name, muscles):
     if len(insertions) > 1:
         insertions = [insertions[0]]
 
-    if insertions:
+    if insertions[0]:
         insertion_redaction = ". Se inserta " + insertions[0].lower() + "."
 
     # Redact final
     redaction = ""
-    if functions and insertions:
+    if functions or insertions[0]:
         redaction = function_redaction + insertion_redaction
-    elif description:
+    else:
         redaction = description
 
     return redaction
@@ -109,7 +109,10 @@ def redact_line(name, muscles):
     info = redact_info(name, muscles)
     reference = get_reference(name, muscles)
 
-    redaction = f"**{name_corrected}:** {info} ({reference})" 
+    redaction = ""
+
+    if info:
+        redaction = f"**{name_corrected}:** {info} ({reference})" 
 
     return redaction
 
@@ -124,9 +127,8 @@ def start_redacting_all():
     with open("redaction.txt", "w+", encoding="utf-8") as f:
         for i, muscle in enumerate(muscles_names):
             line = redact_line(muscle, muscles)
-            f.write(line + "\n\n")
-            
-    # print(get_description(muscles_names[6], muscles))
+            if line:
+                f.write(line + "\n\n")
 
 
 if __name__ == "__main__":
