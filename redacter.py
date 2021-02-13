@@ -128,7 +128,7 @@ def start_redacting_all():
         for i, muscle in enumerate(muscles_names):
             line = redact_line(muscle, muscles)
             if line:
-                f.write(line + "\n\n")
+                f.write("1. " + line + "\n\n")
 
 
 if __name__ == "__main__":
